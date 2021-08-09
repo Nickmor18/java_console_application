@@ -22,18 +22,20 @@ public class ConsoleApplication {
         ArrayList<Double> paramsList = new ArrayList<>();
         Scanner scanner = new Scanner(System.in);
 
+        //Scanner для считывания
         while (true){
             System.out.println("Введите команду: ");
             userCommand = scanner.nextLine();
             String command = userCommand.trim();
             String[] words = command.split(" ");
 
+            //выделяем команду и параметры
             if (!words[0].isEmpty()) {
                 checkCommand = words[0];
                 for (String word : words){
                     if (word.isEmpty() || word.equals(checkCommand)) continue;
                     try {
-                        param = Double.parseDouble(word);
+                        param = Double.parseDouble(word); //в ТЗ не указано, что могут быть только целые чила
                         paramsList.add(param);
                     } catch (Exception e) {
                         isGoodParam = false;
@@ -42,6 +44,7 @@ public class ConsoleApplication {
                 }
             }
 
+            //если параметры неверные, попросим ввести их заного
             if (!isGoodParam) {
                 System.out.println("Ошибка. Кажется Вы ввели неверный параметр. Пожалуйста, попробуйте еще раз");
                 paramsList.clear();
@@ -51,22 +54,19 @@ public class ConsoleApplication {
 
             switch (checkCommand) {
                 case "add":
-                    System.out.println("Определена команда - add");
                     add(paramsList);
                     break;
                 case "print":
-                    System.out.println("Определена команда - print");
                     print(paramsList);
                     break;
                 case "remove":
-                    System.out.println("Определена команда - remove");
                     remove(paramsList);
                     break;
                 case "clear":
-                    System.out.println("Определена команда - clear");
+                    clear(scanner);
                     break;
                 case "help":
-                    System.out.println("Выводим список команд");
+                    help();
                     break;
                 default:
                     System.out.println("Ошибка. Команда не определена. Пожалуйста, попробуйте ввести команду раз");
@@ -118,7 +118,7 @@ public class ConsoleApplication {
                     isGoodCoords = true;
                 }
 
-                if (yCoord >= (xCoord*xCoord*xCoord)){
+                if (yCoord >= Math.abs(xCoord*xCoord*xCoord)){
                     pointListThirdGroup.add(new Point2D.Double(xCoord,yCoord));
                     isGoodCoords = true;
                 }
@@ -199,5 +199,45 @@ public class ConsoleApplication {
                 }
             }
         }
+    }
+
+    /**
+     *
+     * Реализация команды "help"
+     *
+     */
+    private static void help(){
+        System.out.println("add <point>         - добавить в память программы точки,");
+        System.out.println("                    координаты передаются парами чисел через пробел");
+        System.out.println("                    прим. add 1 1 -2 -3 //добавить 2 точки: (1,1) и (-2,-3)");
+        System.out.println("");
+        System.out.println("print               - напечатать построчно каждую из трех групп (входящие в них точки)");
+        System.out.println("                    если в группу не попадает ни одна точка, то выводится сообщение, что группа пуста");
+        System.out.println("                    последней строкой печатается количество точек, не вошедших ни в одну группу");
+        System.out.println("");
+        System.out.println("print <group_num>   - напечатать одним списком точки, входящие в группу(ы) переданную(ые) параметром <group_num>");
+        System.out.println("                    прим. print 1 2");
+        System.out.println("");
+        System.out.println("remove <group_num>  - удалить из памяти все точки, входящие в группу(ы) <group_num>, прим. remove 2 3");
+        System.out.println("");
+        System.out.println("clear               - очистить память");
+        System.out.println("");
+        System.out.println("help                - вывод справки по командам");
+    }
+
+    /**
+     *
+     * Реализация команды "clear"
+     *
+     * @param scanner
+     */
+    private static void clear(Scanner scanner){
+        //TODO: "очистить память", не понятно что именно(закрыть Scanner, мб подготовить к  сборщику мусора, завершить программу),
+        // просто обнулил все данные точек
+        pointListFirstGroup.clear();
+        pointListSecondGroup.clear();
+        pointListThirdGroup.clear();
+        pointListNullGroup.clear();
+        mapGroupCoordinates.clear();
     }
 }
